@@ -15,7 +15,7 @@ bool initialized = false;
 #elif defined _M_ARM64
 #define arch "ARM"
 #else
-#error "SturdyEngine does not support your archetechure, please compile for either x86-64 or for ARM"
+#error "CPUInfo does not support this archetechure and operating system combination"
 #endif
 #ifdef _WIN32
 #include <windows.h>
