@@ -1,23 +1,24 @@
+
 # CPUInfo
-A C++ Header Only Include that Wraps either the CPUInfo syscall, or a emulated windows CPUInfo syscall(In Linux)
+A C++ header-only library that provides an interface to system CPU information, leveraging either the native CPUInfo syscall or an emulated Windows CPUInfo syscall on Linux.
 
 ## Purpose
-Add a easy interface to allow programs access to every piece of information on the processor, even with those tricky hybrid CPUs
+The purpose of CPUInfo is to provide an easy interface that allows applications to access comprehensive details about the processor, including data on complex hybrid CPUs.
 
-## Including
-Either drop this into an includes folder, or wrap in your own folder inside of an includes folder, and use:
+## Installation
+Simply place the header file in your project's include directory, or within a dedicated subdirectory in the includes folder. You can include it in your project with:
 ```cpp
 #include "cpuinfo.h"
-//or  if wrapped in a folder
+// If in a subdirectory:
 #include "{folder_name}/cpuinfo.h"
 ```
-and the preprocessors should handle the rest, abstracting over the archetechure so your program does not need to explicitly change calls based on archetechure
+The preprocessor directives included in the library handle architecture abstraction, eliminating the need for architecture-specific calls in your application.
 
-## Use
-to use the cpuinfo library, use the `CPU` type described in `cpuinfo.h`, this on creation will spawn threads at runtime on every thread to get the capabilities of each hardware thread, and will also know whether or not the cpu is a hybrid. as of yet I have not added a explicit way to determine which cores are the powerfull cores, but rather allow code running to quickly index what the capabilities are of the thread its running on by hardware thread ID
+## Usage
+To utilize the CPUInfo library, create an instance of the `CPU` class defined in `cpuinfo.h`. This class initializes threads at runtime for each hardware thread to ascertain their capabilities and identifies whether the CPU is hybrid. Currently, there is no direct method to distinguish between high-performance and efficiency cores; however, the library facilitates quick access to thread capabilities via hardware thread ID.
 
-### Do I need to synchronize anything?
-No, the creation of the CPU obj is expensive but caches the results for later use, this ensures that these rather expensive calls occur once, and are completed from there, the CPU object has a internal register that will allow it to busy-wait until all threads have completed the cpuid task, then allow the calling thread to continue without the developer ever having to tough semaphores or mutexes
+### Thread Safety
+The initialization of the `CPU` object is resource-intensive but is designed to cache the results for subsequent use. This design ensures that costly operations are performed only once. The object uses an internal mechanism to wait until all threads have finished executing the CPUID tasks before proceeding, obviating the need for external synchronization tools like semaphores or mutexes.
 
-### why tho?
-This exists to allow programs to create a faster path that may not be supported by the majority of hardware yet, without breaking support for said hardware, allowing a program to either choose an equivalent path to softly ignore hardware incompatability, or allowing a program a low-effort way to error and crash, telling the user why
+### Rationale
+This library was developed to enable applications to exploit advanced hardware capabilities that may not be widely supported yet, without compromising backward compatibility. It provides a straightforward approach for applications to either adapt to or gracefully handle hardware limitations, including mechanisms for error handling and user notifications.
